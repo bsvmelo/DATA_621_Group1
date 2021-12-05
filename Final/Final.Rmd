@@ -93,10 +93,30 @@ na_count = data.frame(na_count)
 na_count
 ```
 
+## Duplicate Row
+We will be wanting to remove all duplicate rows in the data set in order to make sure that we will not be skewing results when creating the model
+```{r}
+train_data = train_data %>% distinct()
+```
+
+It seems like that our dataset does not have any duplicates as we have the same amount of rows that we started with.
+
+## Distribution of Heart Disease
+Next we will be looking at how many data points do we have where the client has or does not have heart disease. We would like to make sure that the dataset is has a balance of people with and without heart disease in order to create an accurate model.
+
+```{r}
+train_data %>%
+  count(HeartDisease)
+```
+
+As we can see from the result the dataset is also balanced as we have 410 datapoints which dont have heart disease and 508 data points with heart disease.
+
+## Outliers
+
 
 
 # Model Creation
 
 # Model Selection
 
-# Conclusion
+# Conclusion'
