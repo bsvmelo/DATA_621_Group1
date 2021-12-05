@@ -57,13 +57,21 @@ if(!require('tidyverse')) (install.packages('tidyverse'))
 
 \newpage
 
-# Introduction
+# Abstract
 For the final project we will be using different predictive modeling techniques that we have learned throughout the course and using real world data in order to predict if a person has heart disease based on certain factors. The dataset for this final project [Heart Failure Prediction Dataset](https://www.kaggle.com/fedesoriano/heart-failure-prediction) can be found on Kaggle. Each observation in this dataset represents a person's health history, including their age, sex, cholesterol levels, etc. The dataset includes a total of 918 distinct individuals gathered from different countries and agencies. This dataset includes 12 different features, of categorical and/or continous values, of an individual health record, including if the individual has heart disease or not.
 
-## Background
+# Background
 Cardiovascular diseases is the number 1 cause of death globally. The WHO records show that cardiovascular diseases accounted for 31% of all deaths worldwide in 2016.  According to the CDC, nearly 6.2 million adults in the United States suffer heart failure, and in 2018 alone, heart failure was mentioned on 379,800 death certificates. Also, the treatment cost of health care services and medicines is costly and estimated about 31 billion in 2012. Early detection and management for heart disease could be effective in reducing the incidence of heart failure. 
 
 Note that heart failure occurs when the heart cannot pump enough blood and oxygen to support other organs in the body. With this dataset, we would like to see if we can develop a good model to predict if a person has heart disease and what factors can be attributed to heart disease most directly. We will be tackling this question with the usage of different regression techniques and algorithms learned from this class.
+
+# Introduction
+The reason why we have chosen this dataset to work with is because of how relavent this dataset is towards the real world. Heart disease is a condition which affects everyone and being able to successfully predict heart failure ahead of time can save millions of lives. Data scientist are studying everyday trying to understand the predictors of heart failure which is why datasets like this are often on Kaggle in order to gather data scientist from all over to help solve this issue in order to help society.
+
+# Literature Review
+Bruno
+
+# Methodolgy
 
 # Data Exploration
 ```{r}
