@@ -361,11 +361,10 @@ We show below a table of the fitted values, using the predictions based on Model
 
 
 ```{r, echo=FALSE, warning=FALSE}
-prediction<- predict(Model4, complete_eval_data, type="response")
+prediction<- round(predict(Model4, complete_eval_data, type="response"),0)
 complete_eval_data$TARGET <- prediction
 print(table(round(Model4$fitted.values)))
-write.csv(prediction, 'HW5preds.csv', row.names = FALSE)
-
+write.csv(complete_eval_data, 'HW5preds.csv', row.names = FALSE)
 ```
 And here it is the training set target value distribution:
 
