@@ -27,7 +27,7 @@ City University of New York, School of Professional Studies - Data 621\\
 \bigskip
 DATA 621 – Business Analytics and Data Mining\\
 \medskip
-Home Work 5\\
+Final Project\\
 \medskip
 Prepared by:\\
 \medskip
@@ -50,8 +50,11 @@ Sie Siong Wong\\
 
 \pagebreak
 
+
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
 if(!require('tidyverse')) (install.packages('tidyverse'))
+if(!require('caret')) (install.packages('caret'))
+if(!require('ggpubr')) (install.packages('ggpubr'))
 ```
 
 
@@ -74,12 +77,85 @@ Bruno
 # Methodolgy
 
 # Data Exploration
-```{r}
-# TODO: Split the dataset into a train and evaluation dataset
-dataset = read.csv('https://raw.githubusercontent.com/ahussan/DATA_621_Group1/main/Final/heart.csv')
 
-train_data = dataset
-eval_data = dataset
+## Attribute Information
+
+**Age**: age of the patient [years]
+**Sex**: sex of the patient [M: Male, F: Female]
+**ChestPainType**: chest pain type [TA: Typical Angina, ATA: Atypical Angina, NAP: Non-Anginal Pain, ASY: Asymptomatic]
+**RestingBP**: resting blood pressure [mm Hg]
+**Cholesterol**: serum cholesterol [mm/dl]
+**FastingBS**: fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]
+**RestingECG**: resting electrocardiogram results [Normal: Normal, ST: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH: showing probable or definite left ventricular hypertrophy by Estes' criteria]
+**MaxHR**: maximum heart rate achieved [Numeric value between 60 and 202]
+**ExerciseAngina**: exercise-induced angina [Y: Yes, N: No]
+**Oldpeak**: oldpeak = ST [Numeric value measured in depression]
+**ST_Slope**: the slope of the peak exercise ST segment [Up: upsloping, Flat: flat, Down: downsloping]
+**HeartDisease**: output class [1: heart disease, 0: Normal]
+
+## Split Dataset
+
+We split the dataset by allocating 70% of the dataset to the training set and 30% to the test set. The training set will be used to build models and the evaluation set will be used to evaluate the performance of the models. 
+
+```{r, echo=FALSE, warning=FALSE}
+# TODO: Split the dataset into a train and evaluation dataset
+set.seed(123)
+dataset = read.csv('https://raw.githubusercontent.com/ahussan/DATA_621_Group1/main/Final/heart.csv')
+train_index <- createDataPartition(dataset$HeartDisease, p = .7, list = FALSE, times = 1)
+train_data = dataset[train_index,]
+eval_data = dataset[-train_index,]
+```
+
+This dataset contain 918 observations and 12 variables. There are 6 integer variables, 5 character variables, and 1 numeric variable.
+
+The response variable will be the **HeartDisease** and the rest of 11 variables are all predictors.
+
+```{r, echo=FALSE, warning=FALSE}
+str(dataset)
+```
+
+Below we'll display a few basic EDA techniques to gain insight into our heart failure dataset.
+
+## Summary Statistic
+
+We can see from quite a few of variables are high variance and skewed. Also, there are no missing data in this dataset. 
+
+```{r, echo=FALSE, warning=FALSE}
+dataset %>% dplyr::select(-c(Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope)) %>%  describe()
+plot_missing(dataset)
+```
+
+From below histogram and density plots, we notice that there are some zero values for Cholesterol variable. As Cholesterol measurement cannot be zero, we may need to want to consider replace with mean or median or impute the zeros.
+
+```{r, echo=FALSE, warning=FALSE}
+plot_histogram(dataset)
+plot_density(dataset)
+```
+
+For predictors which are character data type, we do count for categorical for which having heart disease. From below bar plots, we can notice Male is more likely to get heart disease than women. Also, most heart disease patients do not feel chest pain, normal blood pressure, having exercise-induced angina, and flat st segment. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+sex <- dataset %>% dplyr::select(c(Sex, HeartDisease)) %>% filter(HeartDisease ==1) %>% group_by(HeartDisease, Sex) %>% summarise(count=n()) %>% ggplot(aes(x=reorder(Sex, -count), y=count, fill=Sex)) + geom_bar(stat="identity") + ggtitle("Sex Count of Heart Disease = 1") + theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1))
+
+chestpain <- dataset %>% dplyr::select(c(ChestPainType, HeartDisease)) %>% filter(HeartDisease ==1) %>% group_by(HeartDisease, ChestPainType) %>% summarise(count=n()) %>% ggplot(aes(x=reorder(ChestPainType, -count), y=count, fill=ChestPainType)) + geom_bar(stat="identity") + ggtitle("Chest Pain Type Count of Heart Disease = 1") + theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1)) 
+
+resting <- dataset %>% dplyr::select(c(RestingECG, HeartDisease)) %>% filter(HeartDisease ==1) %>% group_by(HeartDisease, RestingECG) %>% summarise(count=n()) %>% ggplot(aes(x=reorder(RestingECG, -count), y=count, fill=RestingECG)) + geom_bar(stat="identity") + ggtitle("Resting Blood Pressure Count of Heart Disease = 1") + theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1)) 
+
+exercise <- dataset %>% dplyr::select(c(ExerciseAngina, HeartDisease)) %>% filter(HeartDisease ==1) %>% group_by(HeartDisease, ExerciseAngina) %>% summarise(count=n()) %>% ggplot(aes(x=reorder(ExerciseAngina, -count), y=count, fill= ExerciseAngina)) + geom_bar(stat="identity") + ggtitle("Exercise-induced Angina Count of Heart Disease = 1") + theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1))
+
+slope <- dataset %>% dplyr::select(c(ST_Slope, HeartDisease)) %>% filter(HeartDisease ==1) %>% group_by(HeartDisease, ST_Slope) %>% summarise(count=n()) %>% ggplot(aes(x=reorder(ST_Slope, -count), y=count, fill=ST_Slope)) + geom_bar(stat="identity") + ggtitle("Slope of Peak Exercise ST Segment Count of Heart Disease = 1") + theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = 0, vjust = 0.5, hjust=1))
+
+ggarrange(sex, chestpain, resting, exercise, slope, 
+          ncol = 2, nrow = 3)
+```
+
+## Identifying Multicollinearity
+
+From the correlation chart below, we can see there is no single pairwise correlations among predictors is significant. So, we don't have to worry about multicollinearity exist in this dataset.
+
+```{r, echo=FALSE, warning=FALSE}
+correlation = cor(dplyr::select(dataset,-c(Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope)), use = 'pairwise.complete.obs')
+corrplot(correlation, method='ellipse', type = 'lower', order = 'hclust',col=brewer.pal(n=8, name="RdYlBu"))
 ```
 
 # Data Preperation
