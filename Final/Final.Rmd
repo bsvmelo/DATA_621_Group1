@@ -111,6 +111,151 @@ train_data %>%
 
 As we can see from the result the dataset is also balanced as we have 410 datapoints which dont have heart disease and 508 data points with heart disease.
 
+# Data preparation
+
+To understand the data in a better way,I created the following table to explain the Definition and the value of each feature.
+
+
+```{r echo=FALSE}
+Feature <- c("Age", "Sex", "ChestPainType","RestingBP", "Cholesterol", "FastingBS", "RestingECG", "MaxHR", "ExerciseAngina", "Oldpeak", "ST_Slope", "HeartDisease" )
+ 
+Definition <- c("Patient's age in years", "Gender", "Type of chest-pain", "Resting blood pressure in mmHg","Serum cholestoral in mg/dl", "Fasting blood sugar higher than 120 mg/dl", "Resting electrocardiographic results", "Maximum heart rate achieved", "Exercise induced angina", "ST depression induced by exercise relative to rest", "The slope of the peak exercise ST segment", 
+"Diagnosis of heart disease")
+
+
+Value <- c("28 - 77", "(0)female, (1)male", "(0)typical angina, (1)atypical angina, (2)non-angina pain, (3)asymptomatic", "0 - 200", "0 – 603", "(0)False (1)True", "(0)normal, (1)having ST-T wave abnormality,  (2)showing probable left ventricular hypertrophy", "60 –202", ("(0)No(1)Yes"), ("-2.6 - 6.2") ,  "(1)upsloping, (2)flat, (3)downsloping", 
+"(0)heart disease not present, (1)heart disease present")
+
+df <- data.frame(Feature, Definition, Value)
+knitr::kable(df)
+
+```
+
+```{r}
+str(train_data)
+```
+
+The 'str' function describes the structure of the data. We need to change/convert most of the features.
+
+
+```{r}
+#Change values to 0 and 1
+#Sex
+train_data$Sex<-ifelse(train_data$Sex=="M",1,0)
+#ExerciseAngina
+train_data$ExerciseAngina <- ifelse(train_data$ExerciseAngina == "Y", 1,0)
+
+```
+
+```{r}
+#ChestPainType: Change typical angina (TA) to 0, atypical angina (ATA) to 1, non-angina pain(NAP) to 2, asymptomatic(ASY) to 3.
+train_data$ChestPainType = factor(train_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'), labels = c('0','1','2','3'))
+
+#RestingECG: 0 for Normal, 1 for ST, and 2 for LVH
+train_data$RestingECG = factor(train_data$RestingECG, levels = c('Normal','ST','LVH'), labels = c('0','1','2'))
+
+#ST_Slope: 0 for UP, 1 for FLAT, and 2 for DOWN
+train_data$ST_Slope = factor(train_data$ST_Slope, levels = c('Up','Flat','Down'), labels = c('0','1','2'))
+```
+
+```{r}
+#Convert columns to factor
+train_data$Sex <- as.factor(train_data$Sex)
+train_data$ExerciseAngina <- as.factor(train_data$ExerciseAngina)
+train_data$FastingBS <- as.factor(train_data$FastingBS)
+train_data$HeartDisease <- as.factor(train_data$HeartDisease)
+
+#Convert columns to num
+train_data$RestingBP <- as.numeric(train_data$RestingBP)
+train_data$Age <- as.numeric(train_data$Age)
+train_data$Cholesterol <- as.numeric(train_data$Cholesterol)
+train_data$MaxHR <- as.numeric(train_data$MaxHR)
+
+```
+
+## Distribution of Heart Disease among males and females
+
+```{r}
+xtabs(~ HeartDisease + Sex, data= train_data)
+```
+There are 50 females out of 193 who have diagnosed with heart disease and 458 males out of 725 were diagnosed with heart disease.
+
+This indicates that 63% of males in this dataset are diagnosed with heart disease where is only 26% of females are diagnosed with heart disease.
+
+**We can conclude that males are more diagnosed with heart disease than females**
+
+```{r}
+mosaicplot(train_data$Sex ~ train_data$HeartDisease,
+           main="Heart disease outcome by Gender", shade=FALSE,color=TRUE,
+           xlab="Gender", ylab="Heart disease")
+```
+
+**Numerical Variables**
+
+```{r}
+#Create a subset with numerical data
+Numerical <- train_data  %>%
+  select(Age,Oldpeak, MaxHR, Cholesterol, RestingBP,HeartDisease) %>% 
+  gather(key = "key", value = "value", -HeartDisease)
+```
+
+```{r}
+#Visualize numeric variables using boxplots
+Numerical %>% 
+  ggplot(aes(y = value)) +
+       geom_boxplot(aes(fill = HeartDisease),
+                      alpha  = .6,
+                      fatten = .7) +
+        labs(x = "",
+             y = "",
+             title = "Boxplots for Numeric Variables") +
+      scale_fill_manual(
+            values = c("#fde725ff", "#20a486ff"),
+            name   = "Heart\nDisease",
+            labels = c("No HD", "Yes HD")) +
+      theme(
+         axis.text.x  = element_blank(),
+         axis.ticks.x = element_blank()) +
+      facet_wrap(~ key, 
+                 scales = "free", 
+                 ncol   = 2) 
+```
+
+**Categorical Variables**
+
+```{r}
+#Create a subset for the categorical variables
+Categorical <- train_data  %>%
+  select(Sex, ChestPainType, FastingBS, RestingECG, ST_Slope,ExerciseAngina, HeartDisease) %>%
+  gather(key = "key", value = "value", -HeartDisease)
+```
+
+
+```{r}
+
+#Visualize with bar plot
+Categorical %>% 
+  ggplot(aes(value)) +
+    geom_bar(aes(x        = value, 
+                 fill     = HeartDisease), 
+                 alpha    = .6, 
+                 position = "dodge", 
+                 color    = "black",
+                 width    = .8
+             ) +
+    labs(x = "",
+         y = "",
+         title = "barplot for Categorical Variables") +
+    theme(
+         axis.text.y  = element_blank(),
+         axis.ticks.y = element_blank()) +
+    facet_wrap(~ key, scales = "free", nrow = 4) +
+    scale_fill_manual(
+         values = c("#fde725ff", "#20a486ff"),
+         name   = "Heart\nDisease",
+         labels = c("No diagnosis", " Diagnosed"))
+```
+
 ## Outliers
 
 
