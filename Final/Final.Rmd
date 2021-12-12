@@ -82,9 +82,23 @@ Note that heart failure occurs when the heart cannot pump enough blood and oxyge
 The reason why we have chosen this dataset to work with is because of how relavent this dataset is towards the real world. Heart disease is a condition which affects everyone and being able to successfully predict heart failure ahead of time can save millions of lives. Data scientist are studying everyday trying to understand the predictors of heart failure which is why datasets like this are often on Kaggle in order to gather data scientist from all over to help solve this issue in order to help society.
 
 # Literature Review
-Bruno
+Several papers have been written about heard heart failure detection using different statistical methodologies - especially related to classification using machine learning techniques.
+
+An initial search in Google scholar site underhttps://scholar.google.com/scholar?hl=en&as_sdt=0%2C33&q=diagnosis+of+heart+disease&btnG=&oq=diagnosis+of+hear retuns around 4min paper! Just in 2021, google accounts for 80k papers and citations.
+
+Given the depth of this study field, we decided to cite one paper that uses a similar dataset but uses prediction techniques not learned in this class: Prediction of heart disease and classifiers’ sensitivity analysis by Khaled Mohamad Almustafa published at BMC Bioinformatics volume 21, Article number: 278 (2020): https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-03626-y#Abs1 
+This paper also offers an ample reference of other related paper that could be beneficial for future related work in this area.
+
+In the paper, a comparative analysis of different classifiers was performed for the classification of the Heart Disease dataset in order to correctly classify and or predict HD cases with minimal attributes. The algorithms used K- Nearest Neighbor (K-NN), Naive Bayes, Decision tree J48, JRip, SVM, Adaboost, Stochastic Gradient Decent (SGD) and Decision Table (DT) classifiers to show the performance of the selected classifications algorithms to best classify, and or predict, the HD cases.
+
+Result is that using different classification algorithms for the classification of the HD dataset gives very promising results in term of the classification accuracy for the K-NN (K=1), Decision tree J48 and JRip classifiers with accuracy of classification of 99.7073, 98.0488 and 97.2683% respectively.
+
+Main conclusion is to have a reliable feature selection method for HD disease prediction with using minimal number of attributes instead of having to consider all available ones.
+
 
 # Methodolgy
+Methodology will follows typical data science project: from understanding the dataset through exploratory data analysis, data preparation, model buildings and finally model evaluation. 
+
 
 # Data Exploration
 
