@@ -414,8 +414,7 @@ It's surprising to see that neither 'cholesterol', 'age' nor 'blood pressure' ha
 vif(model1)
 ```
 
-
-Removing non-significant terms with the help of function `drop1', we fit a reduced model - model2.
+Removing non-significant terms with the help of function `drop1', we fit a reduced model.
 
 ```{r}
 drop1(model1,test="Chi")
@@ -425,7 +424,7 @@ model2a<-glm(HeartDisease ~ Sex + ChestPainType + FastingBS + MaxHR + ExerciseAn
 summary(model2)
 ```
 
-Next, we build a model using variables in the physical attributes and general health groups which are commonly associated with heart diseases: cholesterol, blood pressure, age and genre.
+Next, we build a model using variables in the physical attributes and general health groups which are commonly associated with heart diseases: cholesterol, blood pressure, age and genre. In addition, as related in the conclusion of the paper cited in the literature review, simple models seem to perform better.
 
 
 ```{r}
