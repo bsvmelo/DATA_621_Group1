@@ -56,6 +56,7 @@ if(!require('tidyverse')) (install.packages('tidyverse'))
 if(!require('caret')) (install.packages('caret'))
 if(!require('ggpubr')) (install.packages('ggpubr'))
 if(!require('DataExplorer')) (install.packages('DataExplorer'))
+if(!require('rstatix')) (install.packages('rstatix'))
 ```
 
 
@@ -151,11 +152,23 @@ ggarrange(sex, chestpain, resting, exercise, slope,
 
 ## Identifying Multicollinearity
 
-From the correlation chart below, we can see there is no single pairwise correlations among predictors is significant. So, we don't have to worry about multicollinearity exist in this dataset.
+The correlation chart below shows some correlation among predictors. We can do a correlation test for each continuous predictor by using the Pearson method and at 95% confidence level to determine if any correlation among predictors is significant.
 
 ```{r, echo=FALSE, warning=FALSE}
 correlation = cor(dplyr::select(dataset,-c(Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope)), use = 'pairwise.complete.obs')
 corrplot(correlation, method='ellipse', type = 'lower', order = 'hclust',col=brewer.pal(n=8, name="RdYlBu"))
+```
+From the table below, we can see most pairwise combinations' p-value are less than 5% significant level. This indicates those pairwise combinations are significantly correlated. Note that the effect of collinearity on prediction is less serious. The accuracy of the prediction depends on the distance from the observed data. Collinear data only covers very small fraction of the the predictor space.
+
+```{r, echo=FALSE, warning=FALSE}
+chol <- dataset %>% cor_test(vars="Cholesterol",vars2=c("MaxHR","FastingBS","RestingBP","Age","Oldpeak"), method="pearson")
+maxhr <- dataset %>% cor_test(vars="MaxHR",vars2=c("Cholesterol","FastingBS","RestingBP","Age","Oldpeak"), method="pearson")
+fastbs <- dataset %>% cor_test(vars="FastingBS",vars2=c("Cholesterol","MaxHR","RestingBP","Age","Oldpeak"), method="pearson")
+restbp <- dataset %>% cor_test(vars="RestingBP",vars2=c("Cholesterol","MaxHR","FastingBS","Age","Oldpeak"), method="pearson")
+age <- dataset %>% cor_test(vars="Age",vars2=c("Cholesterol","MaxHR","FastingBS","RestingBP","Oldpeak"), method="pearson")
+oldp <- dataset %>% cor_test(vars="Oldpeak",vars2=c("Cholesterol","MaxHR","FastingBS","RestingBP","Age"), method="pearson")
+combine_df <- bind_rows(chol, maxhr, fastbs, restbp, age, oldp) %>% select(c(var1,var2, p))
+combine_df[order(-combine_df$p),]
 ```
 
 # Data Preperation
