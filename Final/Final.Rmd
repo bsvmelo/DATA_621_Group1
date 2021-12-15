@@ -227,20 +227,29 @@ The 'str' function describes the structure of the data. We need to change/conver
 #Change values to 0 and 1
 #Sex
 train_data$Sex<-ifelse(train_data$Sex=="M",1,0)
+eval_data$Sex<-ifelse(eval_data$Sex=="M", 1, 0)
+
 #ExerciseAngina
 train_data$ExerciseAngina <- ifelse(train_data$ExerciseAngina == "Y", 1,0)
+eval_data$ExerciseAngina <- ifelse(eval_data$ExerciseAngina == "Y", 1, 0)
 
 ```
 
 ```{r}
 #ChestPainType: Change typical angina (TA) to 0, atypical angina (ATA) to 1, non-angina pain(NAP) to 2, asymptomatic(ASY) to 3.
 train_data$ChestPainType = factor(train_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'), labels = c('0','1','2','3'))
+eval_data$ChestPainType = factor(eval_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'), labels = c('0','1','2','3'))
 
 #RestingECG: 0 for Normal, 1 for ST, and 2 for LVH
 train_data$RestingECG = factor(train_data$RestingECG, levels = c('Normal','ST','LVH'), labels = c('0','1','2'))
 
 #ST_Slope: 0 for UP, 1 for FLAT, and 2 for DOWN
 train_data$ST_Slope = factor(train_data$ST_Slope, levels = c('Up','Flat','Down'), labels = c('0','1','2'))
+
+eval_data$RestingECG = factor(eval_data$RestingECG, levels = c('Normal','ST','LVH'), labels = c('0','1','2'))
+#ST_Slope: 0 for UP, 1 for FLAT, and 2 for DOWN
+eval_data$ST_Slope = factor(eval_data$ST_Slope, levels = c('Up','Flat','Down'), labels = c('0','1','2'))
+
 ```
 
 ```{r}
@@ -255,6 +264,19 @@ train_data$RestingBP <- as.numeric(train_data$RestingBP)
 train_data$Age <- as.numeric(train_data$Age)
 train_data$Cholesterol <- as.numeric(train_data$Cholesterol)
 train_data$MaxHR <- as.numeric(train_data$MaxHR)
+
+#eval
+#Convert columns to factor
+eval_data$Sex <- as.factor(eval_data$Sex)
+eval_data$ExerciseAngina <- as.factor(eval_data$ExerciseAngina)
+eval_data$FastingBS <- as.factor(eval_data$FastingBS)
+eval_data$HeartDisease <- as.factor(eval_data$HeartDisease)
+#Convert columns to num
+eval_data$RestingBP <- as.numeric(eval_data$RestingBP)
+eval_data$Age <- as.numeric(eval_data$Age)
+eval_data$Cholesterol <- as.numeric(eval_data$Cholesterol)
+eval_data$MaxHR <- as.numeric(eval_data$MaxHR)
+
 ```
 
 ## Distribution of Heart Disease
@@ -356,6 +378,11 @@ This dataset seems to not have any missing data which is quite rare for a datase
 na_count = sapply(train_data, function(y) sum(is.na(y)))
 na_count = data.frame(na_count)
 na_count
+#eval
+eval_na_count = sapply(eval_data, function(y) sum(is.na(y)))
+eval_na_count = data.frame(eval_na_count)
+eval_na_count
+
 ```
 
 ## Duplicate Row
@@ -488,5 +515,61 @@ round(importance(model7), 2)
 We see that the most important variables are `ST_Slope`, `ChestPainType`, `Oldpeak`, 'Age', 'MaxHR'. 
 
 # Model Selection
+In order to select a model, we will compare various metrics for all seven models using the training data set. We'll employ confusion matrices, accuracy, and other metrics to ensure we're selecting the most complete, descriptive model. 
 
+```{r}
+library(pROC)
+library(ROCR)
+# we'll start with a ROC comparison
+par(mfrow=c(2,2))
+plot(roc(train_data$HeartDisease,  predict(model1, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 1')
+plot(roc(train_data$HeartDisease,  predict(model2, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 2')
+plot(roc(train_data$HeartDisease,  predict(model3, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 3')
+plot(roc(train_data$HeartDisease,  predict(model4, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 4')
+plot(roc(train_data$HeartDisease,  predict(model5, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 5')
+plot(roc(train_data$HeartDisease,  predict(model6, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 6')
+#roc7 <- multiclass.roc(train_data$HeartDisease,  predict(model7, train_data, interval = "prediction"),  levels=base::levels(as.factor(train_data$HeartDisease)))
+#plot(multiclass.roc(train_data$HeartDisease, predict(model7, train_data, type = 'prob', print.auc = TRUE, main = 'Roc Curve Model 7')))
+#plot(multiclass.roc(response = train_data$HeartDisease, predictor = predict(model7, train_data, type = "prob", print.auc = TRUE, main = 'Roc Curve Model 7')))
+
+library(caret)
+CM1 <- confusionMatrix(as.factor(as.integer(fitted(model1) > .5)), as.factor(model1$y), positive = "1")
+CM2 <- confusionMatrix(as.factor(as.integer(fitted(model2) > .5)), as.factor(model2$y), positive = "1")
+CM3 <- confusionMatrix(as.factor(as.integer(fitted(model3) > .5)), as.factor(model3$y), positive = "1")
+CM4 <- confusionMatrix(as.factor(as.integer(fitted(model4) > .5)), as.factor(model4$y), positive = "1")
+CM5 <- confusionMatrix(as.factor(as.integer(fitted(model5) > .5)), as.factor(model5$y), positive = "1")
+CM6 <- confusionMatrix(as.factor(as.integer(fitted(model6) > .5)), as.factor(model6$y), positive = "1")
+
+Roc1 <- roc(train_data$HeartDisease,  predict(model1, train_data, interval = "prediction"))
+Roc2 <- roc(train_data$HeartDisease,  predict(model2, train_data, interval = "prediction"))
+Roc3 <- roc(train_data$HeartDisease,  predict(model3, train_data, interval = "prediction"))
+Roc4 <- roc(train_data$HeartDisease,  predict(model4, train_data, interval = "prediction"))
+Roc5 <- roc(train_data$HeartDisease,  predict(model5, train_data, interval = "prediction"))
+Roc6 <- roc(train_data$HeartDisease,  predict(model6, train_data, interval = "prediction"))
+
+metrics1 <- c(CM1$overall[1], "Class. Error Rate" = 1 - as.numeric(CM1$overall[1]), CM1$byClass[c(1, 2, 5, 7)], AUC = Roc1$auc, "MAE" = MAE(fitted(model1),model1$y), "RMSE" = RMSE(fitted(model1),model1$y), "R2" = R2(fitted(model1), model1$y))
+metrics2 <- c(CM2$overall[1], "Class. Error Rate" = 1 - as.numeric(CM2$overall[1]), CM2$byClass[c(1, 2, 5, 7)], AUC = Roc2$auc, "MAE" = MAE(fitted(model2),model1$y), "RMSE" = RMSE(fitted(model2),model2$y), "R2" = R2(fitted(model2), model2$y))
+metrics3 <- c(CM3$overall[1], "Class. Error Rate" = 1 - as.numeric(CM3$overall[1]), CM3$byClass[c(1, 2, 5, 7)], AUC = Roc3$auc, "MAE" = MAE(fitted(model3),model3$y), "RMSE" = RMSE(fitted(model3),model3$y), "R2" = R2(fitted(model3), model3$y))
+metrics4 <- c(CM4$overall[1], "Class. Error Rate" = 1 - as.numeric(CM4$overall[1]), CM4$byClass[c(1, 2, 5, 7)], AUC = Roc4$auc, "MAE" = MAE(fitted(model4),model4$y), "RMSE" = RMSE(fitted(model4),model4$y), "R2" = R2(fitted(model4), model4$y))
+metrics5 <- c(CM5$overall[1], "Class. Error Rate" = 1 - as.numeric(CM5$overall[1]), CM5$byClass[c(1, 2, 5, 7)], AUC = Roc5$auc, "MAE" = MAE(fitted(model5),model5$y), "RMSE" = RMSE(fitted(model5),model5$y), "R2" = R2(fitted(model5), model5$y))
+metrics6 <- c(CM6$overall[1], "Class. Error Rate" = 1 - as.numeric(CM6$overall[1]), CM6$byClass[c(1, 2, 5, 7)], AUC = Roc6$auc, "MAE" = MAE(fitted(model6),model6$y), "RMSE" = RMSE(fitted(model6),model6$y), "R2" = R2(fitted(model6), model6$y))
+library(htmltools)
+library(kableExtra)
+kable(cbind(metrics1, metrics2, metrics3, metrics4, metrics5, metrics6), col.names = c("Model 1", "Model 2", "Model 3", "Model 4", "Model 5", "Model 6"))  %>% 
+  kable_styling(full_width = T)
+```
+
+The table above demonstrates that our first two logistic regression models provide the most explanatory value. In fact, our "kitchen sink" model enjoys the highest accuracy and R-squared values while maintaining the lowest MAE and RMSE values. Finally, its ROC curve makes clear that Model 1 is the best choice. 
+
+
+```{r echo=FALSE, message=FALSE, results=FALSE}
+
+# Prediction and evaluation on selected model
+prediction_binary = predict(model1, eval_data, type="response")
+eval_data$HeartDisease = prediction_binary
+eval_data$HeartDisease <- ifelse(eval_data$HeartDisease > 0.5, 1, 0)
+print(head(eval_data,10))
+write.csv(eval_data, 'predictions.csv')
+
+```
 # Conclusion'
