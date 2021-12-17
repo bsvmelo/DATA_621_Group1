@@ -79,14 +79,16 @@ Cardiovascular diseases is the number 1 cause of death globally. The WHO records
 Note that heart failure occurs when the heart cannot pump enough blood and oxygen to support other organs in the body. With this dataset, we would like to see if we can develop a good model to predict if a person has heart disease and what factors can be attributed to heart disease most directly. We will be tackling this question with the usage of different regression techniques and algorithms learned from this class.
 
 # Introduction
-The reason why we have chosen this dataset to work with is because of how relavent this dataset is towards the real world. Heart disease is a condition which affects everyone and being able to successfully predict heart failure ahead of time can save millions of lives. Data scientist are studying everyday trying to understand the predictors of heart failure which is why datasets like this are often on Kaggle in order to gather data scientist from all over to help solve this issue in order to help society.
+The reason why we have chosen this dataset to work with is because of how relevant this dataset is towards the real world. Heart disease is a condition which affects everyone and being able to successfully predict heart failure ahead of time can save millions of lives. Data scientist are studying everyday trying to understand the predictors of heart failure which is why datasets like this are often on Kaggle in order to gather data scientist from all over to help solve this issue in order to help society.
 
 # Literature Review
 Several papers have been written about heard heart failure detection using different statistical methodologies - especially related to classification using machine learning techniques.
 
-An initial search in Google scholar site underhttps://scholar.google.com/scholar?hl=en&as_sdt=0%2C33&q=diagnosis+of+heart+disease&btnG=&oq=diagnosis+of+hear retuns around 4min paper! Just in 2021, google accounts for 80k papers and citations.
+An initial search in Google scholar site under 
+https://scholar.google.com/scholar?hl=en&as_sdt=0%2C33&q=diagnosis+of+heart+disease&btnG=&oq=diagnosis+of+hear 
+returns around 4min paper! Just in 2021, google accounts for 80k papers and citations.
 
-Given the depth of this study field, we decided to cite one paper that uses a similar dataset but uses prediction techniques not learned in this class: Prediction of heart disease and classifiers’ sensitivity analysis by Khaled Mohamad Almustafa published at BMC Bioinformatics volume 21, Article number: 278 (2020): https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-03626-y#Abs1 
+Given the depth of this study field, we decided to cite one paper that uses a similar dataset but uses prediction techniques not learned in this class: Prediction of heart disease and classifiers’ sensitivity analysis by Khaled Mohamad Almustafa published at BMC Bioinformatics volume 21, Article number: 278 (2020): https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-03626-y#Abs1        
 This paper also offers an ample reference of other related paper that could be beneficial for future related work in this area.
 
 In the paper, a comparative analysis of different classifiers was performed for the classification of the Heart Disease dataset in order to correctly classify and or predict HD cases with minimal attributes. The algorithms used K- Nearest Neighbor (K-NN), Naive Bayes, Decision tree J48, JRip, SVM, Adaboost, Stochastic Gradient Decent (SGD) and Decision Table (DT) classifiers to show the performance of the selected classifications algorithms to best classify, and or predict, the HD cases.
@@ -104,18 +106,18 @@ Methodology will follows typical data science project: from understanding the da
 
 ## Attribute Information
 
-**Age**: age of the patient [years]
-**Sex**: sex of the patient [M: Male, F: Female]
-**ChestPainType**: chest pain type [TA: Typical Angina, ATA: Atypical Angina, NAP: Non-Anginal Pain, ASY: Asymptomatic]
-**RestingBP**: resting blood pressure [mm Hg]
-**Cholesterol**: serum cholesterol [mm/dl]
-**FastingBS**: fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]
-**RestingECG**: resting electrocardiogram results [Normal: Normal, ST: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH: showing probable or definite left ventricular hypertrophy by Estes' criteria]
-**MaxHR**: maximum heart rate achieved [Numeric value between 60 and 202]
-**ExerciseAngina**: exercise-induced angina [Y: Yes, N: No]
-**Oldpeak**: oldpeak = ST [Numeric value measured in depression]
-**ST_Slope**: the slope of the peak exercise ST segment [Up: upsloping, Flat: flat, Down: downsloping]
-**HeartDisease**: output class [1: heart disease, 0: Normal]
+**Age**: age of the patient [years]           
+**Sex**: sex of the patient [M: Male, F: Female]               
+**ChestPainType**: chest pain type [TA: Typical Angina, ATA: Atypical Angina, NAP: Non-Anginal Pain, ASY: Asymptomatic]              
+**RestingBP**: resting blood pressure [mm Hg]              
+**Cholesterol**: serum cholesterol [mm/dl]              
+**FastingBS**: fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]             
+**RestingECG**: resting electrocardiogram results [Normal: Normal, ST: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH: showing probable or definite left ventricular hypertrophy by Estes' criteria]                
+**MaxHR**: maximum heart rate achieved [Numeric value between 60 and 202]         
+**ExerciseAngina**: exercise-induced angina [Y: Yes, N: No]           
+**Oldpeak**: oldpeak = ST [Numeric value measured in depression]           
+**ST_Slope**: the slope of the peak exercise ST segment [Up: upsloping, Flat: flat, Down: downsloping]             
+**HeartDisease**: output class [1: heart disease, 0: Normal]            
 
 ## Split Dataset
 
@@ -236,19 +238,26 @@ eval_data$ExerciseAngina <- ifelse(eval_data$ExerciseAngina == "Y", 1, 0)
 ```
 
 ```{r}
-#ChestPainType: Change typical angina (TA) to 0, atypical angina (ATA) to 1, non-angina pain(NAP) to 2, asymptomatic(ASY) to 3.
-train_data$ChestPainType = factor(train_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'), labels = c('0','1','2','3'))
-eval_data$ChestPainType = factor(eval_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'), labels = c('0','1','2','3'))
+#ChestPainType: Change typical angina (TA) to 0, atypical angina (ATA) 
+#to 1, non-angina pain(NAP) to 2, asymptomatic(ASY) to 3.
+train_data$ChestPainType = factor(train_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'),
+                                  labels = c('0','1','2','3'))
+eval_data$ChestPainType = factor(eval_data$ChestPainType, levels = c('TA','ATA','NAP','ASY'),
+                                 labels = c('0','1','2','3'))
 
 #RestingECG: 0 for Normal, 1 for ST, and 2 for LVH
-train_data$RestingECG = factor(train_data$RestingECG, levels = c('Normal','ST','LVH'), labels = c('0','1','2'))
+train_data$RestingECG = factor(train_data$RestingECG, levels = c('Normal','ST','LVH'), 
+                               labels = c('0','1','2'))
 
 #ST_Slope: 0 for UP, 1 for FLAT, and 2 for DOWN
-train_data$ST_Slope = factor(train_data$ST_Slope, levels = c('Up','Flat','Down'), labels = c('0','1','2'))
+train_data$ST_Slope = factor(train_data$ST_Slope, levels = c('Up','Flat','Down'), 
+                             labels = c('0','1','2'))
 
-eval_data$RestingECG = factor(eval_data$RestingECG, levels = c('Normal','ST','LVH'), labels = c('0','1','2'))
+eval_data$RestingECG = factor(eval_data$RestingECG, levels = c('Normal','ST','LVH'), 
+                              labels = c('0','1','2'))
 #ST_Slope: 0 for UP, 1 for FLAT, and 2 for DOWN
-eval_data$ST_Slope = factor(eval_data$ST_Slope, levels = c('Up','Flat','Down'), labels = c('0','1','2'))
+eval_data$ST_Slope = factor(eval_data$ST_Slope, levels = c('Up','Flat','Down'), 
+                            labels = c('0','1','2'))
 
 ```
 
@@ -300,7 +309,7 @@ This indicates that 63% of males in this dataset are diagnosed with heart diseas
 
 **We can conclude that males are more diagnosed with heart disease than females**
 
-```{r}
+```{r , echo=FALSE}
 mosaicplot(train_data$Sex ~ train_data$HeartDisease,
            main="Heart disease outcome by Gender", shade=FALSE,color=TRUE,
            xlab="Gender", ylab="Heart disease")
@@ -308,14 +317,14 @@ mosaicplot(train_data$Sex ~ train_data$HeartDisease,
 
 **Numerical Variables**
 
-```{r}
+```{r, echo=FALSE}
 #Create a subset with numerical data
 Numerical <- train_data  %>%
   select(Age,Oldpeak, MaxHR, Cholesterol, RestingBP,HeartDisease) %>% 
   gather(key = "key", value = "value", -HeartDisease)
 ```
 
-```{r}
+```{r, echo=FALSE}
 #Visualize numeric variables using boxplots
 Numerical %>% 
   ggplot(aes(y = value)) +
@@ -339,7 +348,7 @@ Numerical %>%
 
 **Categorical Variables**
 
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 #Create a subset for the categorical variables
 Categorical <- train_data  %>%
   select(Sex, ChestPainType, FastingBS, RestingECG, ST_Slope,ExerciseAngina, HeartDisease) %>%
@@ -347,7 +356,7 @@ Categorical <- train_data  %>%
 ```
 
 
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 
 #Visualize with bar plot
 Categorical %>% 
@@ -374,7 +383,7 @@ Categorical %>%
 
 ## Missing Data
 This dataset seems to not have any missing data which is quite rare for a dataset. This means that there is not going to be a need to remove the NA rows or to replace the NA items with the median or mean. But while the dataset may not have any missing data there might be other issues that needs to be addressed
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 na_count = sapply(train_data, function(y) sum(is.na(y)))
 na_count = data.frame(na_count)
 na_count
@@ -387,7 +396,7 @@ eval_na_count
 
 ## Duplicate Row
 We will be wanting to remove all duplicate rows in the data set in order to make sure that we will not be skewing results when creating the model
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 train_data = train_data %>% distinct()
 ```
 
@@ -398,7 +407,7 @@ As seen in the data exploration part of the section we can see that we have a lo
 
 ### Cholesterol
 Minimun values is now:
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 #remove rows where cholesterol & restingBP == 0 and create new dataset
 train_data1 <- train_data
 train_data1 <- train_data1[train_data1$Cholesterol != 0,]
@@ -412,7 +421,7 @@ min(train_data$Cholesterol)
 
 ### Resting BP
 Minimun values is now:
-```{r}
+```{r, warning= FALSE, echo=FALSE}
 rest_median <- median(train_data$RestingBP[train_data$RestingBP!= 0])
 train_data$RestingBP[train_data$RestingBP == 0] <- rest_median
 min(train_data$RestingBP)
@@ -445,8 +454,12 @@ Removing non-significant terms with the help of function `drop1', we fit a reduc
 
 ```{r}
 drop1(model1,test="Chi")
-model2<-glm(HeartDisease ~ Sex + ChestPainType + FastingBS + MaxHR + ExerciseAngina + Oldpeak + ST_Slope, family = binomial(link = "logit"), data = train_data)
-model2a<-glm(HeartDisease ~ Sex + ChestPainType + FastingBS + MaxHR + ExerciseAngina + Oldpeak + ST_Slope, family = binomial(link = "logit"), data = train_data1)
+model2<-glm(HeartDisease ~ Sex + ChestPainType + FastingBS + MaxHR + 
+              ExerciseAngina + Oldpeak + ST_Slope, 
+            family = binomial(link = "logit"), data = train_data)
+model2a<-glm(HeartDisease ~ Sex + ChestPainType + FastingBS + MaxHR +
+               ExerciseAngina + Oldpeak + ST_Slope, 
+             family = binomial(link = "logit"), data = train_data1)
 
 summary(model2)
 ```
@@ -455,15 +468,19 @@ Next, we build a model using variables in the physical attributes and general he
 
 
 ```{r}
-model3<-glm(HeartDisease~ Cholesterol + Sex + RestingBP + Age + FastingBS, family=binomial(link="logit"), data=train_data)
-model3a<-glm(HeartDisease~ Cholesterol + Sex + RestingBP + Age + FastingBS, family=binomial(link="logit"), data=train_data1)
+model3<-glm(HeartDisease~ Cholesterol + Sex + RestingBP + 
+              Age + FastingBS, family=binomial(link="logit"), data=train_data)
+model3a<-glm(HeartDisease~ Cholesterol + Sex + RestingBP + 
+               Age + FastingBS, family=binomial(link="logit"), data=train_data1)
 summary(model3)
 ```
 We see that 'cholesterol' and 'age' are now significant when other variables are excluded. Only 'RestingBP' is not significant. We will then fit a model removing this feature.
 
 ```{r}
-model4<-glm(HeartDisease~ Cholesterol + Sex +  Age + FastingBS, family=binomial(link="logit"), data=train_data)
-model4a<-glm(HeartDisease~ Cholesterol + Sex + Age + FastingBS, family=binomial(link="logit"), data=train_data1)
+model4<-glm(HeartDisease~ Cholesterol + Sex +  
+              Age + FastingBS, family=binomial(link="logit"), data=train_data)
+model4a<-glm(HeartDisease~ Cholesterol + Sex + 
+               Age + FastingBS, family=binomial(link="logit"), data=train_data1)
 summary(model4)
 ```
 
@@ -486,51 +503,22 @@ model6a<-glm(HeartDisease~ MaxHR +  Oldpeak + ST_Slope+
               ChestPainType , family=binomial(link="logit"), data=train_data1)
 summary(model6)
 ```
-We now fit a model using Random Forest algorithm for regression. Looking at the variable importance - higher value mean more important:
 
-```{r}
-set.seed(345)
-model7<-randomForest(HeartDisease~. , importance=TRUE, mtry = 3, data=train_data)
-round(importance(model7), 2)
-# 
-# model8<-tree(HeartDisease~.,data=train_data )
-# plot(prune.tree(model8))
-# 
-# 
-# reprtree:::plot.getTree(model7)
-# 
-# 
-# plot(model8)
-# 
-# tree <- getTree(model7, k=1, labelVar=TRUE)
-# 
-# realtree <- reprtree:::as.tree(tree, model7)
-# 
-# plot(realtree)
-
-
-
-```
-
-We see that the most important variables are `ST_Slope`, `ChestPainType`, `Oldpeak`, 'Age', 'MaxHR'. 
 
 # Model Selection
 In order to select a model, we will compare various metrics for all seven models using the training data set. We'll employ confusion matrices, accuracy, and other metrics to ensure we're selecting the most complete, descriptive model. 
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo=FALSE}
 library(pROC)
 library(ROCR)
 # we'll start with a ROC comparison
-par(mfrow=c(2,2))
+par(mfrow=c(3,2))
 plot(roc(train_data$HeartDisease,  predict(model1, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 1')
 plot(roc(train_data$HeartDisease,  predict(model2, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 2')
 plot(roc(train_data$HeartDisease,  predict(model3, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 3')
 plot(roc(train_data$HeartDisease,  predict(model4, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 4')
 plot(roc(train_data$HeartDisease,  predict(model5, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 5')
 plot(roc(train_data$HeartDisease,  predict(model6, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 6')
-#roc7 <- multiclass.roc(train_data$HeartDisease,  predict(model7, train_data, interval = "prediction"),  levels=base::levels(as.factor(train_data$HeartDisease)))
-#plot(multiclass.roc(train_data$HeartDisease, predict(model7, train_data, type = 'prob', print.auc = TRUE, main = 'Roc Curve Model 7')))
-#plot(multiclass.roc(response = train_data$HeartDisease, predictor = predict(model7, train_data, type = "prob", print.auc = TRUE, main = 'Roc Curve Model 7')))
 
 library(caret)
 CM1 <- confusionMatrix(as.factor(as.integer(fitted(model1) > .5)), as.factor(model1$y), positive = "1")
@@ -548,28 +536,84 @@ Roc5 <- roc(train_data$HeartDisease,  predict(model5, train_data, interval = "pr
 Roc6 <- roc(train_data$HeartDisease,  predict(model6, train_data, interval = "prediction"))
 
 metrics1 <- c(CM1$overall[1], "Class. Error Rate" = 1 - as.numeric(CM1$overall[1]), CM1$byClass[c(1, 2, 5, 7)], AUC = Roc1$auc, "MAE" = MAE(fitted(model1),model1$y), "RMSE" = RMSE(fitted(model1),model1$y), "R2" = R2(fitted(model1), model1$y))
-metrics2 <- c(CM2$overall[1], "Class. Error Rate" = 1 - as.numeric(CM2$overall[1]), CM2$byClass[c(1, 2, 5, 7)], AUC = Roc2$auc, "MAE" = MAE(fitted(model2),model1$y), "RMSE" = RMSE(fitted(model2),model2$y), "R2" = R2(fitted(model2), model2$y))
+metrics2 <- c(CM2$overall[1], "Class. Error Rate" = 1 - as.numeric(CM2$overall[1]), CM2$byClass[c(1, 2, 5, 7)], AUC = Roc2$auc, "MAE" = MAE(fitted(model2),model2$y), "RMSE" = RMSE(fitted(model2),model2$y), "R2" = R2(fitted(model2), model2$y))
 metrics3 <- c(CM3$overall[1], "Class. Error Rate" = 1 - as.numeric(CM3$overall[1]), CM3$byClass[c(1, 2, 5, 7)], AUC = Roc3$auc, "MAE" = MAE(fitted(model3),model3$y), "RMSE" = RMSE(fitted(model3),model3$y), "R2" = R2(fitted(model3), model3$y))
 metrics4 <- c(CM4$overall[1], "Class. Error Rate" = 1 - as.numeric(CM4$overall[1]), CM4$byClass[c(1, 2, 5, 7)], AUC = Roc4$auc, "MAE" = MAE(fitted(model4),model4$y), "RMSE" = RMSE(fitted(model4),model4$y), "R2" = R2(fitted(model4), model4$y))
 metrics5 <- c(CM5$overall[1], "Class. Error Rate" = 1 - as.numeric(CM5$overall[1]), CM5$byClass[c(1, 2, 5, 7)], AUC = Roc5$auc, "MAE" = MAE(fitted(model5),model5$y), "RMSE" = RMSE(fitted(model5),model5$y), "R2" = R2(fitted(model5), model5$y))
 metrics6 <- c(CM6$overall[1], "Class. Error Rate" = 1 - as.numeric(CM6$overall[1]), CM6$byClass[c(1, 2, 5, 7)], AUC = Roc6$auc, "MAE" = MAE(fitted(model6),model6$y), "RMSE" = RMSE(fitted(model6),model6$y), "R2" = R2(fitted(model6), model6$y))
+
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE, results=TRUE}
 library(htmltools)
 library(kableExtra)
 kable(cbind(metrics1, metrics2, metrics3, metrics4, metrics5, metrics6), col.names = c("Model 1", "Model 2", "Model 3", "Model 4", "Model 5", "Model 6"))  %>% 
   kable_styling(full_width = T)
 ```
+      
+      
+We now do the same with the alternative modes on the smaller dataset where 0 values were excluded from the set.
 
-The table above demonstrates that our first two logistic regression models provide the most explanatory value. In fact, our "kitchen sink" model enjoys the highest accuracy and R-squared values while maintaining the lowest MAE and RMSE values. Finally, its ROC curve makes clear that Model 1 is the best choice. 
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+library(pROC)
+library(ROCR)
+# we'll start with a ROC comparison
+par(mfrow=c(3,2))
+plot(roc(train_data$HeartDisease,  predict(model1a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 1')
+plot(roc(train_data$HeartDisease,  predict(model2a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 2')
+plot(roc(train_data$HeartDisease,  predict(model3a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 3')
+plot(roc(train_data$HeartDisease,  predict(model4a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 4')
+plot(roc(train_data$HeartDisease,  predict(model5a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 5')
+plot(roc(train_data$HeartDisease,  predict(model6a, train_data, interval = "prediction")), print.auc = TRUE, main='ROC Curve Model 6')
+#roc7 <- multiclass.roc(train_data$HeartDisease,  predict(model7, train_data, interval = "prediction"),  levels=base::levels(as.factor(train_data$HeartDisease)))
+#plot(multiclass.roc(train_data$HeartDisease, predict(model7, train_data, type = 'prob', print.auc = TRUE, main = 'Roc Curve Model 7')))
+#plot(multiclass.roc(response = train_data$HeartDisease, predictor = predict(model7, train_data, type = "prob", print.auc = TRUE, main = 'Roc Curve Model 7')))
+
+library(caret)
+CM1 <- confusionMatrix(as.factor(as.integer(fitted(model1a) > .5)), as.factor(model1a$y), positive = "1")
+CM2 <- confusionMatrix(as.factor(as.integer(fitted(model2a) > .5)), as.factor(model2a$y), positive = "1")
+CM3 <- confusionMatrix(as.factor(as.integer(fitted(model3a) > .5)), as.factor(model3a$y), positive = "1")
+CM4 <- confusionMatrix(as.factor(as.integer(fitted(model4a) > .5)), as.factor(model4a$y), positive = "1")
+CM5 <- confusionMatrix(as.factor(as.integer(fitted(model5a) > .5)), as.factor(model5a$y), positive = "1")
+CM6 <- confusionMatrix(as.factor(as.integer(fitted(model6a) > .5)), as.factor(model6a$y), positive = "1")
+
+Roc1 <- roc(train_data$HeartDisease,  predict(model1a, train_data, interval = "prediction"))
+Roc2 <- roc(train_data$HeartDisease,  predict(model2a, train_data, interval = "prediction"))
+Roc3 <- roc(train_data$HeartDisease,  predict(model3a, train_data, interval = "prediction"))
+Roc4 <- roc(train_data$HeartDisease,  predict(model4a, train_data, interval = "prediction"))
+Roc5 <- roc(train_data$HeartDisease,  predict(model5a, train_data, interval = "prediction"))
+Roc6 <- roc(train_data$HeartDisease,  predict(model6a, train_data, interval = "prediction"))
+
+metrics1 <- c(CM1$overall[1], "Class. Error Rate" = 1 - as.numeric(CM1$overall[1]), CM1$byClass[c(1, 2, 5, 7)], AUC = Roc1$auc, "MAE" = MAE(fitted(model1a),model1a$y), "RMSE" = RMSE(fitted(model1a),model1a$y), "R2" = R2(fitted(model1a), model1a$y))
+metrics2 <- c(CM2$overall[1], "Class. Error Rate" = 1 - as.numeric(CM2$overall[1]), CM2$byClass[c(1, 2, 5, 7)], AUC = Roc2$auc, "MAE" = MAE(fitted(model2a),model1a$y), "RMSE" = RMSE(fitted(model2a),model2a$y), "R2" = R2(fitted(model2a), model2a$y))
+metrics3 <- c(CM3$overall[1], "Class. Error Rate" = 1 - as.numeric(CM3$overall[1]), CM3$byClass[c(1, 2, 5, 7)], AUC = Roc3$auc, "MAE" = MAE(fitted(model3a),model3a$y), "RMSE" = RMSE(fitted(model3a),model3a$y), "R2" = R2(fitted(model3a), model3a$y))
+metrics4 <- c(CM4$overall[1], "Class. Error Rate" = 1 - as.numeric(CM4$overall[1]), CM4$byClass[c(1, 2, 5, 7)], AUC = Roc4$auc, "MAE" = MAE(fitted(model4a),model4a$y), "RMSE" = RMSE(fitted(model4a),model4a$y), "R2" = R2(fitted(model4a), model4a$y))
+metrics5 <- c(CM5$overall[1], "Class. Error Rate" = 1 - as.numeric(CM5$overall[1]), CM5$byClass[c(1, 2, 5, 7)], AUC = Roc5$auc, "MAE" = MAE(fitted(model5a),model5a$y), "RMSE" = RMSE(fitted(model5a),model5a$y), "R2" = R2(fitted(model5a), model5a$y))
+metrics6 <- c(CM6$overall[1], "Class. Error Rate" = 1 - as.numeric(CM6$overall[1]), CM6$byClass[c(1, 2, 5, 7)], AUC = Roc6$auc, "MAE" = MAE(fitted(model6a),model6a$y), "RMSE" = RMSE(fitted(model6a),model6a$y), "R2" = R2(fitted(model6a), model6a$y))
+
+```
+```{r echo=FALSE, message=FALSE, results=TRUE}
+library(htmltools)
+library(kableExtra)
+kable(cbind(metrics1, metrics2, metrics3, metrics4, metrics5, metrics6), col.names = c("Model 1a", "Model 2a", "Model 3a", "Model 4a", "Model 5a", "Model 6a"))  %>% 
+  kable_styling(full_width = T)
+```
+     
+     
+The two tables above demonstrates that our first two logistic regression models provide the most explanatory value. Using the dataset which we replaced 0 values with the median, our "kitchen sink" model enjoys the highest accuracy and R-squared values while maintaining the lowest MAE and RMSE values. Finally, its ROC curve makes clear that Model 1 is the best choice. 
+
+Using the dataset which 0 values were excluded from the set, model 2 is on par with model 1 - our "kitchen sink", in most metrics while displaying a higher AUC. Considering that is always better to choose parsimonious models, this is the model selected.
 
 
 ```{r echo=FALSE, message=FALSE, results=FALSE}
 
 # Prediction and evaluation on selected model
-prediction_binary = predict(model1, eval_data, type="response")
+prediction_binary = predict(model2, eval_data, type="response")
 eval_data$HeartDisease = prediction_binary
 eval_data$HeartDisease <- ifelse(eval_data$HeartDisease > 0.5, 1, 0)
 print(head(eval_data,10))
 write.csv(eval_data, 'predictions.csv')
 
 ```
-# Conclusion'
+# Conclusion
+We conclude stating that this prediction exercise is very important because it deals directly with a diseases that is the number 1 cause of death globally. Although our model accuracy does not get close to 99% accuracy as stated in some papers we reviewed, we believe the results are satisfactory given that this is an introductory course to regression analysis and moreover, we did not employ any machine learning model.
